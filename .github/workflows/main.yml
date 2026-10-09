@@ -105,4 +105,4 @@ jobs:
             --retry 10 \
             --retry-delay 5 \
             --retry-connrefused \
-            http://victor.li-yim.takima.school/health
+            http://victor.li-yim.takima.school/actuator/health
