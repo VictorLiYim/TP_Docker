@@ -11,3 +11,6 @@
     - database    # lance PostgreSQL
     - app         # lance l'API
     - proxy       # lance Apache
+
+  vars_files:
+    - group_vars/vault.yml

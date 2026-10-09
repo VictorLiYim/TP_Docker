@@ -9,7 +9,8 @@ image_tag: latest
 # Réseaux Docker
 frontend_network: front-net     # httpd <-> backend
 backend_network: backend-net # backend <-> database
-
+vars_files:
+  - vault.yml
 db_name: db
 db_user: "{{ vault_db_user }}"
 db_password: "{{ vault_db_password }}"
