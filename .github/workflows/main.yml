@@ -93,11 +93,15 @@ jobs:
         env:
           ANSIBLE_FORCE_COLOR: "1"
         run: |
+          echo "$VAULT_PASSWORD" > "$RUNNER_TEMP/vault_pass"
           ansible-playbook \
             -i inventories/setup.yml \
             playbook.yml \
+            --vault-password-file "$RUNNER_TEMP/vault_pass" \
             -e ansible_ssh_private_key_file=$HOME/.ssh/id_rsa \
             -e dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }} \
+            -e image_tag=${{ github.sha }}
+          rm -f "$RUNNER_TEMP/vault_pass"
 
       - name: Check API health
         run: |
