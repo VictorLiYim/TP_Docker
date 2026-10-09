@@ -96,7 +96,6 @@ jobs:
             playbook.yml \
             -e ansible_ssh_private_key_file=$HOME/.ssh/id_rsa \
             -e dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }} \
-            -e image_tag=${{ github.sha }}
 
       - name: Health test
         run: curl --fail --silent --show-error --retry 10 --retry-delay 5 --retry-connrefused http://victor.li-yim.takima.school/departments
