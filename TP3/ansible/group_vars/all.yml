@@ -1,0 +1,15 @@
+# Variables communes à tous les rôles
+
+docker_python: /opt/docker_venv/bin/python
+
+# Images publiées sur Docker Hub par le pipeline
+dockerhub_username: victorliy
+image_tag: latest
+
+# Réseaux Docker
+frontend_network: front-net     # httpd <-> backend
+backend_network: backend-net # backend <-> database
+
+db_name: db
+db_user: usr
+db_password: pwd

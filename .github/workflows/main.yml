@@ -60,3 +60,43 @@ jobs:
           context: ./TP1/HTML
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
+
+  # Continuous Deployment : lance les rôles Ansible sur le serveur
+
+  deploy:
+    needs: build-and-push-docker-image
+    # uniquement sur main (les images ne sont poussées que là)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    # un seul déploiement à la fois
+    concurrency: production-deploy
+
+
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Install Ansible
+      - run: pip install ansible
+
+      - name: Prepare SSH key and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy with Ansible
+        working-directory: TP3/ansible
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+        run: |
+          ansible-playbook \
+            -i inventories/setup.yml \
+            playbook.yml \
+            -e ansible_ssh_private_key_file=$HOME/.ssh/id_rsa \
+            -e dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }} \
+            -e image_tag=${{ github.sha }}
+
+      - name: Health test
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 5 --retry-connrefused http://${{ secrets.SERVER_HOST }}/

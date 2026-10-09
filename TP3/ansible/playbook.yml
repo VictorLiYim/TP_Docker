@@ -1,0 +1,12 @@
+# Playbook principal : déploie l'application sur le serveur
+# Lancement : ansible-playbook -i inventories/setup.yml playbook.yml
+- hosts: all
+  gather_facts: true
+  become: true
+
+  roles:
+    - docker      # installe Docker
+    - network     # crée les réseaux
+    - database    # lance PostgreSQL
+    - app         # lance l'API
+    - proxy       # lance Apache

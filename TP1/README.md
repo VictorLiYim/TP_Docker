@@ -222,9 +222,9 @@ Les données sont stockées dans le volume db-data. Le healthcheck pg_isready in
 Réseau : backend-net uniquement, aucun port publié.
 - backend : l'API Spring Boot construite depuis ./simpleapi. Elle reçoit l'URL et les identifiants de la base par 
 variables d'environnement. Elle attend que database soit saine. Son healthcheck interroge /actuator/health. 
-Réseaux : backend-net (vers la base) et proxy-net (vers Apache). Aucun port publié.
+Réseaux : backend-net (vers la base) et front-net (vers Apache). Aucun port publié.
 - HTMl : Apache construit depuis ./httpd, reverse proxy vers backend:8080. Seul service exposé (80:80).
-Il démarre quand backend est sain. Réseau : proxy-net uniquement.
+Il démarre quand backend est sain. Réseau : front-net uniquement.
 - networks : proxy-net et backend-net séparent la couche d'entrée de la couche de données.
 - volumes : db-data assure la persistance de la base.
 

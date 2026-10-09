@@ -21,3 +21,11 @@ Par défaut, les jobs s'exécutent en parallèle. Sans needs, la construction de
 les tests, et on pourrait livrer une image d'une version dont les tests échouent. Avec needs, le job de livraison
 attend la fin du job de tests et ne se lance que s'il a réussi : si un test casse, rien n'est construit ni publié. 
 Seul du code testé arrive donc en livraison.
+
+Question 4
+
+Pousser une image sur un registre comme Docker Hub la rend disponible en dehors de la machine du pipeline. La machine 
+de GitHub Actions est détruite après chaque exécution, donc une image construite mais non poussée disparaît avec elle. 
+Une fois publiée, elle peut être récupérée avec docker pull par un collègue, un serveur de test ou de production, et 
+chaque commit sur main produit automatiquement une image à jour : c'est la partie livraison (CD) du pipeline. Tout le
+monde déploie ainsi exactement la même image, déjà testée, et le registre garde l'historique des versions.
