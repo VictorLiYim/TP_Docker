@@ -92,6 +92,7 @@ jobs:
         working-directory: TP3/ansible
         env:
           ANSIBLE_FORCE_COLOR: "1"
+          VAULT_PASSWORD: ${{ secrets.VAULT_PASSWORD }}
         run: |
           echo "$VAULT_PASSWORD" > "$RUNNER_TEMP/vault_pass"
           ansible-playbook \
