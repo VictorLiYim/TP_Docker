@@ -58,8 +58,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./front
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-httpd:latest
-                ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:${{ github.sha }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   # Continuous Deployment : lance les rôles Ansible sur le serveur
