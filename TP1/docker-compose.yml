@@ -39,7 +39,9 @@ services:
       retries: 10
 
   httpd:
-    build: HTML
+    build:
+      context: ../front
+      dockerfile: Dockerfile
     image: victorliy/tp1-frontend:1.0
     restart: unless-stopped
     ports:
