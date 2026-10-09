@@ -58,7 +58,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./front
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:${{ github.sha }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
