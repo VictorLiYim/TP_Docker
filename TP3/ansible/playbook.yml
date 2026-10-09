@@ -6,6 +6,7 @@
 
   roles:
     - docker      # installe Docker
+    - front       # front
     - network     # crée les réseaux
     - database    # lance PostgreSQL
     - app         # lance l'API

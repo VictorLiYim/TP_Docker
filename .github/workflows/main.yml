@@ -57,8 +57,9 @@ jobs:
       - name: Build image and push httpd
         uses: docker/build-push-action@v6
         with:
-          context: ./TP1/HTML
+          context: ./front
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-httpd:latest
+                ${{ secrets.DOCKERHUB_USERNAME }}/tp1-front:${{ github.sha }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   # Continuous Deployment : lance les rôles Ansible sur le serveur
@@ -98,4 +99,4 @@ jobs:
             -e dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }} \
 
       - name: Health test
-        run: curl --fail --silent --show-error --retry 10 --retry-delay 5 --retry-connrefused http://victor.li-yim.takima.school/departments
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 5 --retry-connrefused http://victor.li-yim.takima.school/api/departments

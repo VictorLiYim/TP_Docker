@@ -1,0 +1,11 @@
+# Rôle front : lance l'interface Vue servie par nginx
+- name: Run front
+  docker_container:
+    name: front                          # nom utilisé par httpd.conf
+    image: "{{ dockerhub_username }}/tp1-front:{{ image_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ frontend_network }}"   # joignable par le proxy seulement
+  vars:
+    ansible_python_interpreter: "{{ docker_python }}"
