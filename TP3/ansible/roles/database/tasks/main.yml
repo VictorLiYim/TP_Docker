@@ -1,0 +1,21 @@
+
+# Rôle database : lance PostgreSQL
+
+- name: Run database
+  docker_container:
+    name: database                       # nom DNS utilisé par l'API
+    image: "{{ dockerhub_username }}/tp1-database:{{ image_tag }}"
+    state: started
+    restart_policy: unless-stopped       # redémarre après un crash ou un reboot
+    env:                                 # équivalent du fichier .env
+      POSTGRES_DB: "{{ db_name }}"
+      POSTGRES_USER: "{{ db_user }}"
+      POSTGRES_PASSWORD: "{{ db_password }}"
+    volumes:
+      - db-data:/var/lib/postgresql/data # volume nommé : les données persistent
+    networks:
+      - name: "{{ backend_network }}"    # joignable seulement par l'API
+    # pas de ports publiés : la base n'est pas exposée à l'extérieur
+  vars:
+    ansible_python_interpreter: "{{ docker_python }}"
+

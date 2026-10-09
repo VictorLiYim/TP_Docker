@@ -1,0 +1,18 @@
+# Rôle network : crée les réseaux Docker de l'application
+
+# Réseau entre le proxy/front et l'API
+- name: Create proxy network
+  docker_network:
+    name: "{{ frontend_network }}"
+    state: present
+  vars:
+    ansible_python_interpreter: "{{ docker_python }}"
+
+# Réseau entre l'API et la base de données (isolé du proxy)
+- name: Create backend network
+  docker_network:
+    name: "{{ backend_network }}"
+    state: present
+  vars:
+    ansible_python_interpreter: "{{ docker_python }}"
+

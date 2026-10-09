@@ -1,0 +1,17 @@
+# Rôle app : lance l'API Spring Boot
+
+- name: Run backend
+  docker_container:
+    name: backend                        # nom attendu par httpd.conf
+    image: "{{ dockerhub_username }}/tp1-backend:{{ image_tag }}"
+    state: started
+    restart_policy: unless-stopped       # réessaie si la base n'était pas prête
+    env:                                 # surcharge application.yml
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/{{ db_name }}"
+      SPRING_DATASOURCE_USERNAME: "{{ db_user }}"
+      SPRING_DATASOURCE_PASSWORD: "{{ db_password }}"
+    networks:
+      - name: "{{ backend_network }}"    # pour joindre la base
+      - name: "{{ frontend_network }}"      # pour être joint par le proxy
+  vars:
+    ansible_python_interpreter: "{{ docker_python }}"
