@@ -1,21 +1,18 @@
 name: Build and push docker images
 on:
-  # se lance seulement quand le workflow "Test backend" est terminé
   workflow_run:
     workflows: ["Test backend"]
     types: [completed]
-    branches: [main]              # uniquement pour la branche main
+    branches: [main]
 
 jobs:
   build-and-push-docker-image:
-    # uniquement si les tests ont réussi, après un push
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # le commit qui a passé les tests
           ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Login to DockerHub
@@ -25,17 +22,30 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./TP1/simpleapi
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-backend:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-backend:${{ github.event.workflow_run.head_sha }}
           push: true
 
       - name: Build image and push database
         uses: docker/build-push-action@v6
         with:
           context: ./TP1/database
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp1-database:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-database:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-database:${{ github.event.workflow_run.head_sha }}
           push: true
 
       - name: Build image and push httpd
+        uses: docker/build-push-action@v6
+        with:
+          context: ./TP1/HTML
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-httpd:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp1-httpd:${{ github.event.workflow_run.head_sha }}
+          push: true
+
+      - name: Build image and push front
         uses: docker/build-push-action@v6
         with:
           context: ./front

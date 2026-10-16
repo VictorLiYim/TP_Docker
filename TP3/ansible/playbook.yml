@@ -6,10 +6,10 @@
 
   roles:
     - docker      # installe Docker
-    - front       # front
     - network     # crée les réseaux
     - database    # lance PostgreSQL
     - app         # lance l'API
+    - front       # frontend
     - proxy       # lance Apache
 
   vars_files:

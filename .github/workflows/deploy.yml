@@ -1,0 +1,50 @@
+name: Deploy
+on:
+  workflow_run:
+    workflows: ["Build and push docker images"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    concurrency: production-deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Prepare SSH key and known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}}
+        run: |
+          test -n "$SSH_PRIVATE_KEY_B64" || { echo "Secret SSH_PRIVATE_KEY_B64 manquant"; exit 1; }
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY_B64" | base64 -d > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -y -f ~/.ssh/id_rsa > /dev/null
+          ssh-keyscan -H victor.li-yim.takima.school >> ~/.ssh/known_hosts
+
+      - name: Deploy with Ansible
+        working-directory: TP3/ansible
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+          VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+        run: |
+          echo "$VAULT_PASSWORD" > "$RUNNER_TEMP/vault_pass"
+          ansible-playbook \
+            -i inventories/setup.yml \
+            playbook.yml \
+            --vault-password-file "$RUNNER_TEMP/vault_pass" \
+            -e ansible_ssh_private_key_file=$HOME/.ssh/id_rsa \
+            -e dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }} \
+            -e image_tag=${{ github.event.workflow_run.head_sha }}
+          rm -f "$RUNNER_TEMP/vault_pass"
+
+      - name: Health test
+        run: curl -i http://victor.li-yim.takima.school/api/actuator/health
