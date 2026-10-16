@@ -2,7 +2,7 @@ name: Test backend
 on:
   # lancé sur main et develop (la branche principale du dépôt s'appelle main)
   push:
-    branches: [main, develop]
+    branches: ['**']
   pull_request:
 #test
 jobs:
