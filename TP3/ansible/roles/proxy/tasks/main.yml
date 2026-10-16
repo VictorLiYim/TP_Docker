@@ -1,14 +1,18 @@
-# Rôle proxy : lance Apache en reverse proxy
-
 - name: Run HTTPD
   docker_container:
     name: httpd
     image: "{{ dockerhub_username }}/tp1-httpd:{{ image_tag }}"
     state: started
+    recreate: true
     restart_policy: unless-stopped
+    env:
+      BACKEND_HOST: backend
+      BACKEND_PORT: "8080"
+      FRONT_HOST: front
+      FRONT_PORT: "80"
     ports:
-      - "80:80"                          # seul port publié sur le serveur
+      - "80:80"
     networks:
-      - name: "{{ frontend_network }}"      # voit l'API, mais pas la base
+      - name: "{{ frontend_network }}"
   vars:
     ansible_python_interpreter: "{{ docker_python }}"
