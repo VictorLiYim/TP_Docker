@@ -1,6 +1,6 @@
 ## Question 3-1
 
-L'inventaire liste les serveurs à gérer (ici un seul, dans le groupe `prod`)
+L'inventaire liste les serveurs à gérer
 et les variables de connexion : l'utilisateur SSH (`admin`) et le chemin de la
 clé privée. La clé elle-même n'est pas versionnée.
 
@@ -21,17 +21,17 @@ clé privée. La clé elle-même n'est pas versionnée.
 - `--become` exécute la commande en administrateur.
 
 Ansible décrit un état voulu plutôt qu'une action : relancer la
-commande de désinstallation donne `changed: false` car Apache est déjà absent.
+commande de désinstallation donne changed: false car Apache est déjà absent.
 
 ## Question 3-2
 
 Un playbook décrit, en YAML, les tâches à appliquer sur les machines de
-l'inventaire. Le playbook principal (`playbook.yml`) cible tous les hôtes
+l'inventaire. Le playbook principal (playbook.yml) cible tous les hôtes
 (`hosts: all`), collecte les facts (`gather_facts: true`) et passe en
 administrateur (`become: true`). Il se contente d'appeler les rôles, dans
 l'ordre : `docker`, `network`, `database`, `app`, `proxy`.
 
-L'installation de Docker est dans le rôle `roles/docker/tasks/main.yml`
+L'installation de Docker est dans le rôle roles/docker/tasks/main.yml
 (créé avec `ansible-galaxy init roles/docker`, en ne gardant que `tasks`).
 
 ### Tâches du rôle `docker`
@@ -81,7 +81,6 @@ Options communes :
 
 Le backend est dans les deux réseaux et sert d'intermédiaire : le proxy ne peut pas joindre la base.
 
-Vérification : `curl http://<adresse-du-serveur>/` doit répondre via httpd puis l'API.
 
 ## Déploiement continu : est-il sûr de déployer automatiquement chaque nouvelle image ?
 
