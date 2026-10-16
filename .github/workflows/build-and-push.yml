@@ -5,7 +5,6 @@ on:
     workflows: ["Test backend"]
     types: [completed]
     branches: [main]              # uniquement pour la branche main
-#test
 jobs:
   build-and-push-docker-image:
     # uniquement si les tests ont réussi, après un push
