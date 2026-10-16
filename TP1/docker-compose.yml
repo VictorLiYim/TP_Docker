@@ -23,7 +23,7 @@ services:
   database:
     build: database
     image : victorliy/tp1-database:1.0
-    restart: unless-stopped
+    restart: on-failure:2
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -43,7 +43,7 @@ services:
       context: ../front
       dockerfile: Dockerfile
     image: victorliy/tp1-frontend:1.0
-    restart: unless-stopped
+    restart: on-failure:2
     ports:
       - "80:80"
     networks:
