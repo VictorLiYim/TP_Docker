@@ -123,8 +123,8 @@ driver-class-name: org.postgresql.Driver
 ```
 
 Le backend peut ainsi communiquer avec PostgreSQL grâce au réseau Docker app-network.
-Api : http://localhost:8080
-Exemple d'endpoint : http://localhost:8080/departments/IRC/students
+Api : http://localhost/api
+Exemple d'endpoint : http://localhost/api/departments/IRC/students
 
 ## HTTP Server
 
